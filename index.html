@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Opportunity Connect</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+body {
+    margin: 0;
+    background: #f5f7fb;
+}
+header {
+    background: #0d47a1;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+nav {
+    background: #1565c0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+nav button {
+    background: none;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 15px;
+}
+nav button:hover {
+    background: #0d47a1;
+}
+section {
+    display: none;
+    padding: 30px;
+}
+.active {
+    display: block;
+}
+.card {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+}
+.btn {
+    background: #0d47a1;
+    color: white;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.btn:hover {
+    background: #08306b;
+}
+footer {
+    background: #0d47a1;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌐 Opportunity Connect</h1>
+    <p>Your Gateway to Scholarships, Internships & Careers</p>
+</header>
+
+<nav>
+    <button onclick="showSection('home')">Home</button>
+    <button onclick="showSection('about')">About</button>
+    <button onclick="showSection('opportunities')">Opportunities</button>
+    <button onclick="showSection('scholarships')">Scholarships</button>
+    <button onclick="showSection('login')">Login</button>
+    <button onclick="showSection('signup')">Sign Up</button>
+    <button onclick="showSection('dashboard')">Dashboard</button>
+</nav>
+
+<!-- ================= HOME ================= -->
+<section id="home" class="active">
+    <div class="card">
+        <h2>Welcome to Opportunity Connect</h2>
+        <p>
+            Opportunity Connect is a centralized platform designed to help students
+            discover scholarships, internships, jobs, and training programs
+            based on their skills, interests, and location.
+        </p>
+    </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about">
+    <div class="card">
+        <h2>About Opportunity Connect</h2>
+        <p>
+            Students often miss opportunities due to lack of awareness and scattered
+            information. Opportunity Connect solves this problem by providing
+            personalized and region-specific opportunities in one platform.
+        </p>
+        <ul>
+            <li>🎓 Student-focused</li>
+            <li>📍 Region-specific opportunities</li>
+            <li>🤖 Smart recommendations</li>
+            <li>🌍 Equal access for all</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ================= OPPORTUNITIES ================= -->
+<section id="opportunities">
+    <h2>All Opportunities</h2>
+    <div id="opportunityList"></div>
+</section>
+
+<!-- ================= SCHOLARSHIPS ================= -->
+<section id="scholarships">
+    <h2>Scholarships</h2>
+    <div class="card">
+        <h3>Merit-Based Scholarship</h3>
+        <p>Eligibility: Undergraduate students</p>
+        <p>Deadline: 30 June</p>
+    </div>
+    <div class="card">
+        <h3>Government Education Grant</h3>
+        <p>Eligibility: Economically weaker students</p>
+        <p>Deadline: 15 July</p>
+    </div>
+</section>
+
+<!-- ================= LOGIN ================= -->
+<section id="login">
+    <div class="card">
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email">
+        <input type="password" id="loginPassword" placeholder="Password">
+        <button class="btn" onclick="login()">Login</button>
+    </div>
+</section>
+
+<!-- ================= SIGN UP ================= -->
+<section id="signup">
+    <div class="card">
+        <h2>Sign Up</h2>
+        <input type="text" id="name" placeholder="Full Name">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <input type="text" id="location" placeholder="Location">
+        <textarea id="skills" placeholder="Skills"></textarea>
+        <textarea id="interests" placeholder="Interests"></textarea>
+        <button class="btn" onclick="register()">Register</button>
+    </div>
+</section>
+
+<!-- ================= DASHBOARD ================= -->
+<section id="dashboard">
+    <h2>User Dashboard</h2>
+    <div class="card">
+        <p>✔ View opportunities</p>
+        <p>✔ Apply for scholarships</p>
+        <p>✔ Track applications</p>
+    </div>
+    <button class="btn" onclick="loadApplications()">View My Applications</button>
+    <div id="applicationList"></div>
+</section>
+
+<footer>
+    © 2026 Opportunity Connect | All Rights Reserved
+</footer>
+
+<script>
+const API = "http://localhost:5000";
+let currentUserId = null;
+
+function showSection(id) {
+    document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+// Register
+function register() {
+    fetch(API + "/register", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            full_name: name.value,
+            email: email.value,
+            password: password.value,
+            location: location.value,
+            skills: skills.value,
+            interests: interests.value
+        })
+    }).then(res => res.json())
+      .then(data => alert(data.message || data.error));
+}
+
+// Login
+function login() {
+    fetch(API + "/login", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            email: loginEmail.value,
+            password: loginPassword.value
+        })
+    }).then(res => res.json())
+      .then(data => {
+        if(data.user_id){
+            currentUserId = data.user_id;
+            alert("Login Successful");
+            loadOpportunities();
+            showSection("dashboard");
+        } else {
+            alert(data.error);
+        }
+      });
+}
+
+// Load Opportunities
+function loadOpportunities() {
+    fetch(API + "/opportunities")
+    .then(res => res.json())
+    .then(data => {
+        opportunityList.innerHTML = "";
+        data.forEach(op => {
+            opportunityList.innerHTML += `
+                <div class="card">
+                    <h3>${op.title}</h3>
+                    <p>${op.description}</p>
+                    <p><b>Category:</b> ${op.category}</p>
+                    <button class="btn" onclick="apply(${op.opportunity_id})">Apply</button>
+                </div>
+            `;
+        });
+    });
+}
+
+// Apply
+function apply(id) {
+    fetch(API + "/apply", {
+        method: "POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            user_id: currentUserId,
+            opportunity_id: id
+        })
+    }).then(res => res.json())
+      .then(data => alert(data.message));
+}
+
+// My Applications
+function loadApplications() {
+    fetch(API + "/my-applications/" + currentUserId)
+    .then(res => res.json())
+    .then(data => {
+        applicationList.innerHTML = "";
+        data.forEach(app => {
+            applicationList.innerHTML += `
+                <div class="card">
+                    <h3>${app.title}</h3>
+                    <p>Status: ${app.status}</p>
+                </div>
+            `;
+        });
+    });
+}
+</script>
+
+</body>
+</html>
