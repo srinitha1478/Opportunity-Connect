@@ -1,0 +1,104 @@
+-- ============================================
+-- Database: opportunity_connect
+-- Project: Opportunity Connect
+-- ============================================
+
+CREATE DATABASE IF NOT EXISTS opportunity_connect;
+USE opportunity_connect;
+
+-- ============================================
+-- 1. Users Table
+-- ============================================
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('student', 'admin') DEFAULT 'student',
+    education_level VARCHAR(100),
+    skills TEXT,
+    interests TEXT,
+    location VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- 2. Opportunities Table
+-- ============================================
+CREATE TABLE opportunities (
+    opportunity_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(150) NOT NULL,
+    description TEXT NOT NULL,
+    category ENUM('Scholarship', 'Internship', 'Job', 'Training') NOT NULL,
+    eligibility TEXT,
+    organization VARCHAR(150),
+    location VARCHAR(100),
+    deadline DATE,
+    apply_link VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================
+-- 3. Applications Table
+-- ============================================
+CREATE TABLE applications (
+    application_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    opportunity_id INT,
+    status ENUM('Applied', 'Shortlisted', 'Rejected') DEFAULT 'Applied',
+    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (opportunity_id) REFERENCES opportunities(opportunity_id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- 4. Saved Opportunities Table
+-- ============================================
+CREATE TABLE saved_opportunities (
+    saved_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    opportunity_id INT,
+    saved_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (opportunity_id) REFERENCES opportunities(opportunity_id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- 5. Recommendations Table (For AI / ML)
+-- ============================================
+CREATE TABLE recommendations (
+    recommendation_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    opportunity_id INT,
+    match_score DECIMAL(5,2),
+    recommended_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (opportunity_id) REFERENCES opportunities(opportunity_id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- 6. Admin Logs Table
+-- ============================================
+CREATE TABLE admin_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT,
+    action TEXT,
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES users(user_id)
+);
+
+-- ============================================
+-- 7. Notifications Table (Optional)
+-- ============================================
+CREATE TABLE notifications (
+    notification_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    message TEXT,
+    is_read BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+-- ============================================
+-- END OF SCHEMA
+-- ============================================
