@@ -1,0 +1,45 @@
+***Scholarship Dataset
+
+Collected from government scholarship portals and educational institution websites
+
+Contains scholarship name, eligibility criteria, education level, location, deadline, and application link
+
+Used to display and filter scholarships based on student profiles
+
+**Internship & Job Opportunities Dataset
+
+Sourced from public job portals, internship platforms, and company career pages
+
+Includes opportunity title, category, required skills, organization, location, and deadline
+
+Used for opportunity discovery and skill-based matching
+
+**User Profile Dataset (System-Generated)
+
+Created during user registration and interaction with the platform
+
+Stores education level, skills, interests, and location
+
+Used for personalized opportunity recommendations
+
+**Application History Dataset
+
+Automatically generated when users apply for opportunities
+
+Contains user ID, opportunity ID, application status, and applied date
+
+Used to track application progress and dashboard display
+
+**Saved Opportunities Dataset
+
+Stores opportunities bookmarked by users
+
+Helps users revisit and apply later
+
+Enhances user engagement
+
+**Synthetic / Sample Dataset
+
+Manually created for development and testing purposes
+
+Used to validate UI, backend APIs, and database design
